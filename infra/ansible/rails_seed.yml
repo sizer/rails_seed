@@ -1,0 +1,4 @@
+- hosts: rails_seed
+  roles:
+    - common
+    - ruby

@@ -1,0 +1,5 @@
+rails:
+  application: rails_seed
+
+ruby:
+  version: 2.5.1

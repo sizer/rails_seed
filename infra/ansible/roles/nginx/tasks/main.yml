@@ -1,0 +1,19 @@
+- name: Install nginx
+  become: yes
+  become_method: sudo
+  apt: pkg=nginx state=installed
+
+- name: Configure Nginx
+  become: yes
+  become_method: sudo
+  template:
+    src: nginx.conf.j2
+    dest: "/etc/nginx/sites-available/{{ rails.application }}"
+
+- name: refect the configuration
+  become: yes
+  become_method: sudo
+  command: "ln -s /etc/nginx/sites-available/{{ rails.application }} /etc/nginx/sites-enabled/{{ rails.application }}"
+  ignore_errors: True
+  notify:
+    - reload nginx

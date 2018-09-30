@@ -1,7 +1,8 @@
 - name: Install nginx
   become: yes
   become_method: sudo
-  apt: pkg=nginx state=installed
+  yum: 
+    name: "nginx"
 
 - name: Configure Nginx
   become: yes

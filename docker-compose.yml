@@ -1,0 +1,55 @@
+version: '2'
+
+services:
+  rails_seed_app:
+    build: containers/rails
+    container_name: rails_seed_app
+    environment:
+      RAILS_ENV: development
+      DATABASE_HOST: db
+      DATABASE_PORT: 3306
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: password
+    ports:
+      - '3000:3000'
+    volumes:
+      - rails_seed-sync:/var/www:rw
+    volumes_from:
+      - datastore
+      - bundle
+    links:
+      - db
+    # For pry
+    # https://github.com/docker/compose/issues/423#issuecomment-141995398
+    tty: true
+    stdin_open: true
+
+  db:
+    build: containers/mysql
+    container_name: rails_seed_db
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: rails_seed_development
+      MYSQL_USER: rails_seed
+      MYSQL_PASSWORD: password
+    ports:
+      - '3306:3306'
+    volumes_from:
+      - datastore
+
+  datastore:
+    build: containers/datastore
+    container_name: rails_seed_datastore
+    volumes:
+      - /datastore
+
+  bundle:
+    build: containers/bundle
+    container_name: rails_seed_bundle
+    volumes:
+      - /bundle
+
+# For docker-sync
+volumes:
+  rails_seed-sync:
+    external: true
